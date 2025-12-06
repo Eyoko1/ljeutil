@@ -22,5 +22,6 @@ return {
         local m_render = lje.include(path .. "ljeumodules/render.lua")
         local m_draw = lje.include(path .. "ljeumodules/draw.lua")
         local m_string = lje.include(path .. "ljeumodules/string.lua")
+        local m_string = lje.include(path .. "ljeumodules/math.lua")
     end
 }
