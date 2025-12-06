@@ -24,6 +24,16 @@ List of functions which are added:
     EndsWith = function(str, endstr) end
 }
 
+{ --> math
+    Round = function(number, idp) end,
+    Clamp = function(number, low, high) end,
+    Rand = function(low, high) end,
+    IsNearlyEqual = function(a, b, tolerance) end,
+    DistanceSqr = function(x1, y1, x2, y2) end,
+    Distance = function(x1, y1, x2, y2) end,
+    Dist = function(x1, y1, x2, y2) end
+}
+
 { --> hook
     list = {}, --> event table
     disabled = false,
