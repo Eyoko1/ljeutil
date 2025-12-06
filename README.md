@@ -26,6 +26,7 @@ List of functions which are added:
 
 { --> hook
     list = {}, --> event table
+    disabled = false,
 
     pre = function(event, identifier, callback) end, --> adds an event to be run before normal gmod callbacks are ran for an event
                                                      --> if an identifier is not passed, one will be generated and returned
@@ -44,6 +45,9 @@ List of functions which are added:
 
     callpre = function(event, ...) end, --> executes lje callbacks for the given pre hook event
     callpost = function(event, ...) end, --> executes lje callbacks for the given post hook event
+
+    disable = function() end, --> stops hooks from running - useful when re-rendering the scene, or using DrawModel
+    enable = function() end --> re-enables hooks
 }
 
 { --> cam

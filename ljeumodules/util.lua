@@ -11,6 +11,8 @@ local math_random = math.random
 local table_concat = table.concat
 local tonumber = tonumber
 
+local ENTITY = cloned_mts.Entity
+
 --> pre-allocate a table for random_string - this makes the function really fast
 local rstringtable = {}
 for i = 1, 128 do
@@ -23,7 +25,8 @@ local environment = lje.env.get()
 local __lje_util = {
     iterate_players = function(callback) end, --> iterates over all players and calls the given callback with each player, excluding the local player
     random_string = function(length) end, --> generates a random string with either the given length, or 32 characters if not specified
-    color_strict = function(r, g, b, a) end --> very fast implementation of color - all arguments must be specified and must be numbers - values are still clamped
+    color_strict = function(r, g, b, a) end, --> very fast implementation of color - all arguments must be specified and must be numbers - values are still clamped
+    safe_draw_model = function(entity) end --> does entity:DrawModel, but doesn't call Pre/PostDrawPlayer
 }
 __lje_util = nil
 
@@ -72,6 +75,13 @@ function lje.util.color_strict(r, g, b, a)
         b = b < 255 and b or 255,
         a = a < 255 and a or 255
     }
+end
+
+local entity_DrawModel = ENTITY.DrawModel
+function lje.util.safe_draw_model(entity, flags)
+    hook.disable()
+    entity_DrawModel(entity, flags)
+    hook.enable()
 end
 
 --> stripped-down copy of the color function - this is enough for it to be used with any c-function

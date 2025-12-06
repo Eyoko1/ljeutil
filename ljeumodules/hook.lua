@@ -25,6 +25,7 @@ local originalcall = nil
 
 local hook = {
     list = {}, --> event table
+    disabled = false,
 
     pre = function(event, identifier, callback) end, --> adds an event to be run before normal gmod callbacks are ran for an event
                                                      --> if an identifier is not passed, one will be generated and returned
@@ -43,6 +44,9 @@ local hook = {
 
     callpre = function(event, ...) end, --> executes lje callbacks for the given pre hook event
     callpost = function(event, ...) end, --> executes lje callbacks for the given post hook event
+
+    disable = function() end, --> stops hooks from running - useful when re-rendering the scene, or using DrawModel
+    enable = function() end --> re-enables hooks
 }
 environment.hook = hook
 
@@ -203,6 +207,14 @@ function hook.callpost(event, ...)
     goto call_post
 end
 
+function hook.disable()
+    hook.disabled = true
+end
+
+function hook.enable()
+    hook.disabled = false
+end
+
 local function executepre(hooks, ...)
     local length = hooks[PRE_HOOKS_LEN]
     if (length == 0) then
@@ -251,7 +263,7 @@ end
 
 local function calldetour(event, gm, ...)
     local hooks = hook.list[event]
-    if (not hooks) then
+    if (not hooks or hook.disabled) then
         return originalcall(event, gm, ...)
     end
 
@@ -330,13 +342,11 @@ local function searchregistry()
 end
 
 local function searchloop()
-    if (originalcall) then
-        return
-    end
-
     disablehooks()
+    if (not originalcall) then
         searchregistry()
         timer.Simple(0.1, searchloop)
+    end
     enablehooks()
 end
 
