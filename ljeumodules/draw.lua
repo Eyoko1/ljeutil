@@ -13,6 +13,7 @@ local surface_DrawText = surface.DrawText
 local surface_SetTexture = surface.SetTexture
 local surface_SetDrawColor = surface.SetDrawColor
 local surface_DrawRect = surface.DrawRect
+local surface_DrawTexturedRect = surface.DrawTexturedRect
 local surface_DrawTexturedRectUV = surface.DrawTexturedRectUV
 local string_find = string.find
 local string_sub = string.sub
@@ -338,6 +339,39 @@ function draw.TextShadow(textdata, distance, alpha) --> i haven't really optimis
     return Text(textdata)
 end
 
+function draw.TexturedQuad(texturedata)
+    local color = texturedata.color or white
+    surface_SetTexture(texturedata.texture)
+    surface_SetDrawColor(color.r, color.g, color.b, color.a)
+    surface_DrawTexturedRect(texturedata.x, texturedata.y, texturedata.w, texturedata.h)
+end
+
+local RoundedBox = draw.RoundedBox
+function draw.WordBox(bordersize, x, y, text, font, color, fontcolor, xalign, yalign)
+    surface_SetFont(font)
+    local width, height = surface_GetTextSize(text)
+
+    if (xalign == TEXT_ALIGN_CENTER) then
+		x = x - (bordersize + width / 2)
+	elseif (xalign == TEXT_ALIGN_RIGHT) then
+		x = x - (bordersize * 2 + width)
+	end
+
+	if (yalign == TEXT_ALIGN_CENTER) then
+		y = y - (bordersize + height / 2)
+	elseif (yalign == TEXT_ALIGN_BOTTOM) then
+		y = y - (bordersize * 2 + height)
+	end
+
+    RoundedBox(bordersize, x, y, width + bordersize * 2, height + bordersize * 2, color)
+
+    surface_SetTextColor(fontcolor.r, fontcolor.g, fontcolor.b, fontcolor.a)
+    surface_SetTextPos(x + bordersize, y + bordersize)
+    surface_DrawText(text)
+
+    return width + bordersize * 2, height + bordersize * 2
+end
+
 local globalstart = 0
 local globalend = 0
 
@@ -347,13 +381,13 @@ local fastend = 0
 hook.pre("PostRender", "Test", function()
     cam.Start2D()
     render.PushRenderTarget(lje.util.rt)
-    if (FrameNumber() % 5 == 0) then
-        if (FrameNumber() % 10 == 0) then
+    if (FrameNumber() % 200 == 0) then
+        if (FrameNumber() % 400 == 0) then
             faststart = SysTime()
-            for i = 1, 10 do
-                --_G.draw.SimpleTextOutlined("SimpleTextOutlined", "CreditsText", ScrW() / 2, ScrH() / 2, white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, black)
-                --_G.draw.SimpleText("SimpleText", "CreditsText", ScrW() / 2, ScrH() / 2, white)
-                draw.DrawText("The quick brown fox\tjumped over\t\tthe lazy dog\nnewline\n\nnewnewline", "CreditsText", ScrW() / 2, ScrH() / 2 + 150, white, TEXT_ALIGN_LEFT)
+            for i = 1, 100000 do
+                --draw.SimpleTextOutlined("SimpleTextOutlined", "CreditsText", ScrW() / 2, ScrH() / 2, white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, black)
+                draw.SimpleText("SimpleText", "CreditsText", ScrW() / 2, ScrH() / 2, white)
+                --draw.DrawText("The quick brown fox\tjumped over\t\tthe lazy dog\nnewline\n\nnewnewline", "CreditsText", ScrW() / 2, ScrH() / 2 + 150, white, TEXT_ALIGN_LEFT)
             end
             fastend = SysTime()
 
@@ -361,10 +395,10 @@ hook.pre("PostRender", "Test", function()
             print(string.format("Fast function: %s, being %sx faster\n", fastend - faststart, (globalend - globalstart) / (fastend - faststart)))
         else
             globalstart = SysTime()
-            for i = 1, 10 do
+            for i = 1, 100000 do
                 --_G.draw.SimpleTextOutlined("SimpleTextOutlined", "CreditsText", ScrW() / 2, ScrH() / 2, white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 1, black)
-                --_G.draw.SimpleText("SimpleText", "CreditsText", ScrW() / 2, ScrH() / 2, white)
-                _G.draw.DrawText("The quick brown fox\tjumped over\t\tthe lazy dog\nnewline\n\nnewnewline", "CreditsText", ScrW() / 2, ScrH() / 2, white, TEXT_ALIGN_LEFT)
+                _G.draw.SimpleText("SimpleText", "CreditsText", ScrW() / 2, ScrH() / 2, white)
+                --_G.draw.DrawText("The quick brown fox\tjumped over\t\tthe lazy dog\nnewline\n\nnewnewline", "CreditsText", ScrW() / 2, ScrH() / 2, white, TEXT_ALIGN_LEFT)
             end
             globalend = SysTime()
         end

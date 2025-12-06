@@ -17,10 +17,10 @@ return {
             path = path .. "/"
         end
 
-        local m_hook = lje.include(path .. "hook.lua")
-        local m_util = lje.include(path .. "util.lua")
-        local m_render = lje.include(path .. "render.lua")
-        local m_draw = lje.include(path .. "draw.lua")
-        local m_string = lje.include(path .. "string.lua")
+        local m_hook = lje.include(path .. "ljeumodules/hook.lua")
+        local m_util = lje.include(path .. "ljeumodules/util.lua")
+        local m_render = lje.include(path .. "ljeumodules/render.lua")
+        local m_draw = lje.include(path .. "ljeumodules/draw.lua")
+        local m_string = lje.include(path .. "ljeumodules/string.lua")
     end
 }
