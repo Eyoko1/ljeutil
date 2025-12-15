@@ -79,8 +79,4 @@ List of functions which are added:
 }
 ```
 
-To use ljeutil, do the following:
-```lua
-local ljeutilpath = "path/to/ljeutil/"
-local m_ljeutil = lje.include(ljeutilpath .. "main.lua").init(ljeutilpath) 
-```
+To use ljeutil, add it as a dependency in your info.toml script.

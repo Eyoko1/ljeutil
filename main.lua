@@ -11,17 +11,9 @@ end
 
 environment.__ljeutils = true
 
-return {
-    init = function(path)
-        if (string.sub(path, -1, -1) ~= "/") then
-            path = path .. "/"
-        end
-
-        local m_string = lje.include(path .. "ljeumodules/string.lua")
-        local m_math = lje.include(path .. "ljeumodules/math.lua")
-        local m_hook = lje.include(path .. "ljeumodules/hook.lua")
-        local m_util = lje.include(path .. "ljeumodules/util.lua")
-        local m_render = lje.include(path .. "ljeumodules/render.lua")
-        local m_draw = lje.include(path .. "ljeumodules/draw.lua")
-    end
-}
+local m_string = lje.include("ljeumodules/string.lua")
+local m_math = lje.include("ljeumodules/math.lua")
+local m_hook = lje.include("ljeumodules/hook.lua")
+local m_util = lje.include("ljeumodules/util.lua")
+local m_render = lje.include("ljeumodules/render.lua")
+local m_draw = lje.include("ljeumodules/draw.lua")
