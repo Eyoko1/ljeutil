@@ -51,13 +51,19 @@ function lje.util.iterate_players(callback)
     goto iterate_players
 end
 
+local randomstringcharacters = {" ", "!", "#", "$", "%", "&", "+", ",", "-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "@", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "^", "_", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+local randomstringcharactercount = #randomstringcharacters
+
 --> generates a random string - this function is really fast so don't worry about overheads for this
 function lje.util.random_string(length)
     length = length or 32
 
     local i = 1
     ::fast_random_string::
-    rstringtable[i] = string_char(math_random(32, 126))
+    --> old method - includes some characters which cause issues
+    --rstringtable[i] = string_char(math_random(32, 126))
+
+    rstringtable[i] = randomstringcharacters[math_random(1, randomstringcharactercount)]
 
     if (i == length) then
         return table_concat(rstringtable, "", 1, length)

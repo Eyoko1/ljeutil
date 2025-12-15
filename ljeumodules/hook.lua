@@ -273,8 +273,12 @@ local function executepost(hooks, ...)
 end
 
 local function calldetour(event, gm, ...)
+    if (hook.disabled) then
+        return
+    end
+
     local hooks = hook.list[event]
-    if (not hooks or hook.disabled) then
+    if (not hooks) then
         return originalcall(event, gm, ...)
     end
 
