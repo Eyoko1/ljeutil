@@ -1,0 +1,7 @@
+# ljeutil - utility for lje
+
+[script]
+name = "ljeutil"
+version = "1.0.0"
+author = "Eyoko1"
+dependencies = []
