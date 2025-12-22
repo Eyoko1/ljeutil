@@ -1,0 +1,53 @@
+--*> file.lua <*--
+--*> re-implements some file functions <*--
+--*> made by eyoko1 <*--
+
+local FILE = cloned_mts.File
+
+local FILE_Read = FILE.Read
+local FILE_Size = FILE.Size
+local FILE_Close = FILE.Close
+local FILE_Write = FILE.Write
+
+local file_Open = file.Open
+function file.Read(filename, path)
+    if (path == true) then
+        path = "GAME"
+    elseif (not path) then
+        path = "DATA"
+    end
+
+    local f = file_Open(filename, "rb", path)
+    if (not f) then
+        return nil
+    end
+
+    local str = FILE_Read(f, FILE_Size(f))
+    FILE_Close(f)
+
+    return str or ""
+end
+
+function file.Write(filename, contents)
+    local f = file_Open(filename, "wb", "DATA")
+    if (not f) then
+        return false
+    end
+
+    FILE_Write(f, contents)
+    FILE_Close(f)
+
+    return true
+end
+
+function file.Append(filename, contents)
+    local f = file_Open(filename, "ab", "DATA")
+    if (not f) then
+        return false
+    end
+
+    FILE_Write(f, contents)
+    FILE_Close(f)
+
+    return true
+end

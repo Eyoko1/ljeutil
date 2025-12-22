@@ -29,8 +29,9 @@ local cam3dtable = {
     aspect = 0
 }
 
+local cam_Start = cam.Start
 function cam.Start2D()
-    cam.Start(cam2dtable)
+    cam_Start(cam2dtable)
 end
 
 function cam.Start3D(pos, ang, fov, x, y, w, h, znear, zfar)
@@ -57,12 +58,12 @@ function cam.Start3D(pos, ang, fov, x, y, w, h, znear, zfar)
 		cam3dtable.zfar	= zfar
 	end
 
-	return cam.Start(cam3dtable)
+	return cam_Start(cam3dtable)
 end
 
 hook.post("PostRender", "__safert", function()
     cam.Start2D()
-        hook.callpre("DrawRT")
+        hook.callpre("ljeutil/render")
 
         local rt = render.GetRenderTarget()
         render.SetRenderTarget(nil)
@@ -70,7 +71,7 @@ hook.post("PostRender", "__safert", function()
             render.DrawScreenQuad(0, 0, ScrW(), ScrH())
         render.SetRenderTarget(rt)
 
-        hook.callpost("DrawRT")
+        hook.callpost("ljeutil/render")
 
         render.PushRenderTarget(safert)
             render.Clear(0, 0, 0, 0, true, true)

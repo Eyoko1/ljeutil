@@ -280,12 +280,13 @@ local function executepost(hooks, ...)
     goto h_execute_post
 end
 
+local hooklist = hook.list
 local function calldetour(event, gm, ...)
     if (hook.disabled) then
         return
     end
 
-    local hooks = hook.list[event]
+    local hooks = hooklist[event]
     if (not hooks) then
         return originalcall(event, gm, ...)
     end

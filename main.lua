@@ -11,9 +11,11 @@ end
 
 environment.__ljeutils = true
 
-local m_string = lje.include("ljeumodules/string.lua")
-local m_math = lje.include("ljeumodules/math.lua")
-local m_hook = lje.include("ljeumodules/hook.lua")
-local m_util = lje.include("ljeumodules/util.lua")
-local m_render = lje.include("ljeumodules/render.lua")
-local m_draw = lje.include("ljeumodules/draw.lua")
+lje.include("ljeumodules/string.lua")
+lje.include("ljeumodules/math.lua")
+lje.include("ljeumodules/hook.lua")
+lje.include("ljeumodules/util.lua")
+lje.include("ljeumodules/render.lua")
+lje.include("ljeumodules/draw.lua")
+lje.include("ljeumodules/file.lua")
+lje.include("ljeumodules/media.lua")

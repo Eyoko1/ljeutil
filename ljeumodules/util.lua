@@ -2,7 +2,6 @@
 --*> contains optimised functions which perform specific tasks <*--
 --*> made by eyoko1 <*--
 
---> micro-optimisations
 local player_GetAll = player.GetAll
 local player_GetCount = player.GetCount
 local LocalPlayer = LocalPlayer
@@ -30,20 +29,23 @@ local __lje_util = {
 }
 __lje_util = nil
 
+local playercount = player_GetCount()
+local players = player_GetAll()
+
+local otherplayercount = player_GetCount()
+local otherplayers = player_GetAll()
+
 --> the given callback is called for every player other than the localplayer, and it is passed such player
 function lje.util.iterate_players(callback)
-    local players = player_GetAll()
-    local count = player_GetCount()
-    local localplayer = LocalPlayer()
+    if (otherplayercount == 0) then
+        return
+    end
 
     local i = 1
     ::iterate_players::
-    local target = players[i]
-    if (target ~= localplayer) then
-        callback(target)
-    end
+    callback(otherplayers[i])
 
-    if (i == count) then
+    if (i == otherplayercount) then
         return
     end
 
@@ -86,10 +88,17 @@ end
 local entity_DrawModel = ENTITY.DrawModel
 local hook_enable = hook.enable
 local hook_disable = hook.disable
+--> equivalent to Entity:DrawModel(), but doesn't call the related hooks for it
 function lje.util.safe_draw_model(entity, flags)
     hook_disable()
     entity_DrawModel(entity, flags)
     hook_enable()
+end
+
+local entity_GetClass = ENTITY.GetClass
+--> returns true if the given entity is a player - ENTITY.IsPlayer or PLAYER.IsPlayer do not work due to how the metatables are implemented (each overwrites the function to either return true or false)
+function lje.util.is_player(entity)
+    return entity_GetClass(entity) == "player"
 end
 
 --> stripped-down copy of the color function - this is enough for it to be used with any c-function
@@ -105,6 +114,58 @@ function Color(r, g, b, a)
         a = a < 255 and a or 255
     }
 end
+
+function player.GetAll()
+    return players
+end
+
+function player.GetCount()
+    return playercount
+end
+
+local util_is_player = lje.util.is_player
+hook.pre("NetworkEntityCreated", "__ljeutil_entities", function(entity)
+    if (util_is_player(entity)) then
+        playercount = playercount + 1
+        players[playercount] = entity
+
+        otherplayercount = otherplayercount + 1
+        otherplayers[otherplayercount] = entity
+    end
+end)
+
+hook.pre("InitPostEntity", "__ljeutil_entities", function()
+    hook.removepre("InitPostEntity", "__ljeutil_entities")
+    players = player_GetAll()
+    playercount = player_GetCount()
+end)
+
+local table_remove = table.remove
+local function searchandremove(tbl, value, count)
+    if (count == 0) then
+        return
+    end
+
+    local length = #tbl
+    local i = 1
+    ::remove::
+    if (rawequal(tbl[i], value)) then
+        table_remove(tbl, i)
+    elseif (i ~= length) then
+        i = i + 1
+        goto remove
+    end
+end
+
+hook.pre("EntityRemoved", "__ljeutil_entities", function(entity)
+    if (util_is_player(entity)) then
+        searchandremove(players, entity, playercount)
+        searchandremove(otherplayers, entity, otherplayercount) --> this can be faster, but the performance gain isnt really worth the development time
+        
+        playercount = playercount - 1
+        otherplayercount = otherplayercount - 1
+    end
+end)
 
 hook.pre("InitPostEntity", "__ljeutil_localplayer", function()
     hook.removepre("InitPostEntity", "__ljeutil_localplayer")
