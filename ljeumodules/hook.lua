@@ -26,9 +26,6 @@ local unpack = unpack
 local originalcall = nil
 
 local hook = {
-    --> ljeutil events:
-        --> DrawRT - called when the safe rt is rendered to the screen 
-
     list = {}, --> event table
     disabled = false,
 
