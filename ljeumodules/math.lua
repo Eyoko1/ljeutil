@@ -11,7 +11,7 @@ local math_sqrt = math.sqrt
 
 function math.Round(number, idp)
     local mult = 10 ^ (idp or 0)
-    return math_floor(num * mult + 0.5) / mult
+    return math_floor(number * mult + 0.5) / mult
 end
 
 function math.Clamp(number, low, high)
